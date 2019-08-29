@@ -50,7 +50,7 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: cheese-account
-  namespace: kube-system
+  namespace: cheese-system
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -61,7 +61,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: elasticsearch-logging
-  namespace: kube-system
+  namespace: cheese-system
   labels:
     k8s-app: elasticsearch-logging
     kubernetes.io/cluster-service: "true"
@@ -88,7 +88,7 @@ rules:
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  namespace: kube-system
+  namespace: cheese-system
   name: elasticsearch-logging
   labels:
     k8s-app: elasticsearch-logging
@@ -97,7 +97,7 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: elasticsearch-logging
-  namespace: kube-system
+  namespace: cheese-system
   apiGroup: ""
 roleRef:
   kind: ClusterRole
@@ -109,7 +109,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: elasticsearch-logging
-  namespace: kube-system
+  namespace: cheese-system
   labels:
     k8s-app: elasticsearch-logging
     version: v6.2.4
@@ -173,7 +173,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: elasticsearch-logging
-  namespace: kube-system
+  namespace: cheese-system
   labels:
     k8s-app: elasticsearch-logging
     kubernetes.io/cluster-service: "true"
@@ -192,7 +192,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: logstash-configmap
-  namespace: kube-system
+  namespace: cheese-system
 data:
   logstash.yml: |
     http.host: "0.0.0.0"
@@ -226,7 +226,7 @@ apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
   name: logstash-deployment
-  namespace: kube-system
+  namespace: cheese-system
 spec:
   replicas: 1
   template:
@@ -262,7 +262,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: logstash-service
-  namespace: kube-system
+  namespace: cheese-system
 spec:
   selector:
     app: logstash
@@ -277,7 +277,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: filebeat-config
-  namespace: kube-system
+  namespace: cheese-system
   labels:
     k8s-app: filebeat
     kubernetes.io/cluster-service: "true"
@@ -306,7 +306,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: filebeat-prospectors
-  namespace: kube-system
+  namespace: cheese-system
   labels:
     k8s-app: filebeat
     kubernetes.io/cluster-service: "true"
@@ -323,7 +323,7 @@ apiVersion: extensions/v1beta1
 kind: DaemonSet
 metadata:
   name: filebeat
-  namespace: kube-system
+  namespace: cheese-system
   labels:
     k8s-app: filebeat
     kubernetes.io/cluster-service: "true"
@@ -399,7 +399,7 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: filebeat
-  namespace: kube-system
+  namespace: cheese-system
 roleRef:
   kind: ClusterRole
   name: filebeat
@@ -425,7 +425,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: filebeat
-  namespace: kube-system
+  namespace: cheese-system
   labels:
     k8s-app: filebeat
 ---
@@ -434,7 +434,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: metricbeat-config
-  namespace: kube-system
+  namespace: cheese-system
   labels:
     k8s-app: metricbeat
 data:
@@ -460,7 +460,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: metricbeat-daemonset-modules
-  namespace: kube-system
+  namespace: cheese-system
   labels:
     k8s-app: metricbeat
 data:
@@ -506,7 +506,7 @@ apiVersion: extensions/v1beta1
 kind: DaemonSet
 metadata:
   name: metricbeat
-  namespace: kube-system
+  namespace: cheese-system
   labels:
     k8s-app: metricbeat
 spec:
@@ -596,11 +596,11 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: metricbeat-deployment-modules
-  namespace: kube-system
+  namespace: cheese-system
   labels:
     k8s-app: metricbeat
 data:
-  # This module requires `kube-state-metrics` up and running under `kube-system` namespace
+  # This module requires `kube-state-metrics` up and running under `cheese-system` namespace
   kubernetes.yml: |-
     - module: kubernetes
       metricsets:
@@ -619,7 +619,7 @@ apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
   name: metricbeat
-  namespace: kube-system
+  namespace: cheese-system
   labels:
     k8s-app: metricbeat
 spec:
@@ -686,7 +686,7 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: metricbeat
-  namespace: kube-system
+  namespace: cheese-system
 roleRef:
   kind: ClusterRole
   name: metricbeat
@@ -713,7 +713,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: metricbeat
-  namespace: kube-system
+  namespace: cheese-system
   labels:
     k8s-app: metricbeat
 ---
@@ -722,7 +722,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: kibana-logging
-  namespace: kube-system
+  namespace: cheese-system
   labels:
     k8s-app: kibana-logging
     kubernetes.io/cluster-service: "true"
@@ -760,7 +760,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: kibana-logging
-  namespace: kube-system
+  namespace: cheese-system
   labels:
     k8s-app: kibana-logging
     kubernetes.io/cluster-service: "true"
@@ -778,7 +778,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: logs-ingress
-  namespace: kube-system
+  namespace: cheese-system
   labels:
     app: logs
   annotations:
