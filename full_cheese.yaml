@@ -4,28 +4,9 @@ metadata:
   name: cheese-system
 ---
 apiVersion: v1
-kind: Service
-metadata:
-  namespace: cheese-system
-  creationTimestamp: null
-  labels:
-    name: cheese
-  name: cheese
-spec:
-  ports:
-  - name: "8888"
-    port: 8888
-    targetPort: 8888
-    nodePort: 30001
-  selector:
-    name: cheese
-  type: NodePort
----
-apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: cheese-account
-  namespace: cheese-system
+  name: cheese-admin
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -33,18 +14,17 @@ metadata:
   name: cheese-role
 rules:
 - apiGroups: [""]
-  resources: ["pods", "pods/log"]
-  verbs: ["get", "watch", "list"]
+  resources: ["pods"]
+  verbs: ["get", "list"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: cheese-account-system-admin
-  namespace: default
+  name: cheese-all-cluster
 subjects:
 - kind: ServiceAccount
-  name: cheese-account
-  apiGroup: rbac.authorization.k8s.io
+  name: cheese-admin
+  namespace: default
 roleRef:
   kind: ClusterRole
   name: cheese-role
@@ -67,13 +47,30 @@ spec:
       labels:
         app: cheese
     spec:
-      serviceAccountName: cheese-account
+      serviceAccountName: cheese-admin
       containers:
       - name: cheese
         image: docker.io/yngus4862/cheese:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8888
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cheese-service
+  namespace: cheese-system
+  creationTimestamp: null
+  labels:
+    name: cheese-service
+spec:
+  type: NodePort
+  ports:
+  - port: 8888
+    targetPort: 8888
+    nodePort: 30001
+  selector:
+    name: cheese
 ---
 #===== Cheese END =====#
 apiVersion: v1
