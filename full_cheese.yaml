@@ -71,6 +71,7 @@ spec:
       containers:
       - name: cheese
         image: docker.io/yngus4862/cheese:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 8888
 ---
