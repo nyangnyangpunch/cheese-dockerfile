@@ -1,7 +1,12 @@
 apiVersion: v1
+kind: Namespace
+metadata:
+  name: cheese-system
+---
+apiVersion: v1
 kind: Service
 metadata:
-  namespace: default
+  namespace: cheese-system
   creationTimestamp: null
   labels:
     name: cheese
@@ -20,25 +25,35 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: cheese-account
-  namespace: default
+  namespace: cheese-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: cheese-role
+rules:
+- apiGroups: [""]
+  resources: ["pods", "pods/log"]
+  verbs: ["get", "watch", "list"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: cheese-account-system-admin
+  namespace: default
 subjects:
 - kind: ServiceAccount
   name: cheese-account
-namespace: default
-roleRef:
   apiGroup: rbac.authorization.k8s.io
+roleRef:
   kind: ClusterRole
-  name: cluster-admin
+  name: cheese-role
+  apiGroup: rbac.authorization.k8s.io
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: default
+  namespace: cheese-system
   name: cheese
   labels:
     app: cheese
