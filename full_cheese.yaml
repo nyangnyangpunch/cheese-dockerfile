@@ -4,6 +4,19 @@ metadata:
   name: cheese-system
 ---
 apiVersion: v1
+kind: Service
+metadata:
+  name: cheese-service
+spec:
+  type: NodePort
+  ports:
+  - port: 8888
+    targetPort: 8888
+    nodePort: 30001
+  selector:
+    name: cheese
+---
+apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: cheese-admin
@@ -54,19 +67,6 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 8888
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: cheese-service
-spec:
-  type: NodePort
-  ports:
-  - port: 8888
-    targetPort: 8888
-    nodePort: 30001
-  selector:
-    name: cheese
 ---
 #===== Cheese END =====#
 apiVersion: v1
