@@ -1,29 +1,12 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: Namespace
 metadata:
-  name: cheese
-  labels:
-    app: cheese
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: cheese
-  template:
-    metadata:
-      labels:
-        app: cheese
-    spec:
-      serviceAccountName: cheese-account
-      containers:
-      - name: cheese
-        image: docker.io/yngus4862/cheese:latest
-        ports:
-        - containerPort: 8888
+  name: cheese-system
 ---
 apiVersion: v1
 kind: Service
 metadata:
+  namespace: cheese-system
   creationTimestamp: null
   labels:
     name: cheese
@@ -51,11 +34,35 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: cheese-account
-  namespace: cheese-system
+namespace: cheese-system
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: cluster-admin
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: cheese-system
+  name: cheese
+  labels:
+    app: cheese
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cheese
+  template:
+    metadata:
+      labels:
+        app: cheese
+    spec:
+      serviceAccountName: cheese-account
+      containers:
+      - name: cheese
+        image: docker.io/yngus4862/cheese:latest
+        ports:
+        - containerPort: 8888
 ---
 #===== Cheese END =====#
 apiVersion: v1
